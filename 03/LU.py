@@ -8,16 +8,15 @@ def LU(A):
     ok = 1                                # Without pivoting, the decomposition might fail so we use a warning flag.
     small = 1e-12                         # If a pivot is smaller than this in absolute value, raise the flag.
     n = np.shape(A)[0]                    # Extract the number of rows and columns.
-    U = np.copy(A)                        # Copy A into U making sure they are separate variable.                    
+    U = np.copy(A)                        # Copy A into U making sure they are separate variables.                    
     L = np.identity(n)                    # Initialize L as identity matrix.
-    for j in range(1,n):                  # Loop over columns.
-        for i in range(j+1,n+1):          # Loop over elements below the pivot.
-            if abs(U[j-1,j-1]) < small:   # Raise error flag and exit if the pivot is too small.
+    for j in range(n):                    # Loop over columns.
+        for i in range(j+1, n):           # Loop over elements below the pivot.
+            if abs(U[j,j]) < small:       # Raise error flag and exit if the pivot is too small.
                 print("Near-zero pivot!")
                 ok = 0
                 break
-            L[i-1,j-1] = U[i-1,j-1]/U[j-1,j-1]                     # Compute the multiplier.
-            for k in range(j,n+1):                                 # Gauss elimination.
-                U[i-1,k-1] = U[i-1,k-1] - L[i-1,j-1] * U[j-1,k-1]
-    return L,U,ok
-
+            L[i,j] = U[i,j] / U[j,j]     # Compute the multiplier.
+            for k in range(j, n):         # Gauss elimination.
+                U[i,k] = U[i,k] - L[i,j] * U[j,k]
+    return L, U, ok
